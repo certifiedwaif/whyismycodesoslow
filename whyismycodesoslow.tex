@@ -135,6 +135,11 @@ plot look better, or working on a thesis chapter? It's your call
 
 % TODO(Mark) You need a picture
 % Diagram: https://stackoverflow.com/questions/28815848/does-each-core-has-its-own-private-set-of-registers
+\begin{frame}{A diagram of a CPU -- Intel core i7 Nehalem microarchitecture}
+	\begin{figure}
+		\includegraphics[scale=0.5]{Intel_core_i7.png}
+	\end{figure}
+\end{frame}
 
 \begin{frame}{What do computers actually do? - Software}
 	\begin{itemize}
@@ -149,8 +154,8 @@ plot look better, or working on a thesis chapter? It's your call
 \begin{frame}{Programming languages}
 	\begin{itemize}	
 		\item Computers run assembly language. Computers were originally programmed in assembly or machine code, but this took a long time, and was tedious and error prone\note{show an example, the dot\_product}
-		\item To allow programmers to be more productive, higher level languages like Fortran and C were invented.
-\item  And then even more high level ones, like R and Python. Python and R are ``glue'' languages that make calling C and Fortran easy, should you need to.
+		\item To allow programmers to be more productive, higher level languages like Fortran and C were invented
+\item  And then even more high level ones, like R and Python. Python and R are ``glue'' languages that make calling C and Fortran easy, should you need to
 		\item There are two major ways that code gets converted to instructions for computers to run: \emph{compilers} and \emph{interpreters}
 			\begin{itemize}
 				\item{compiler} Convert an entire program into assembly language at once
@@ -161,10 +166,10 @@ plot look better, or working on a thesis chapter? It's your call
 
 \begin{frame}{Differences between programming languages}
 	\begin{itemize}	
-		\item C and Fortran require you to manually allocate and deallocate memory, and declare types. \note{Unsafe
+		\item C and Fortran require you to manually allocate and deallocate memory, and declare types \note{Unsafe
 	memory access, leading to the possibility of segmentation faults where
 you attempt to access a piece of memory that's not yours. You need to tell them what type your variables are so it knows how much memory they need, and how that memory is laid out}
-		\item R and Python use reference-counting garbage collection to manage memory for you, and are safe and dynamically typed. \note{They manage the layout and allocation/deallocation of memory for you}
+		\item R and Python use reference-counting garbage collection to manage memory for you, and are safe and dynamically typed \note{They manage the layout and allocation/deallocation of memory for you}
 \item There is a difference in speed: Rust versus R example https://rustr.org/
 \item Array languages like R and Matlab get us out of trouble most of the time, and save us from writing as many loops ourselves. This is why people say ``\texttt{for} loops are slow''
 	\note{BLAS executes your for loops for you in highly optimised Fortran or C, where they're fast}
@@ -184,19 +189,41 @@ you attempt to access a piece of memory that's not yours. You need to tell them 
 	\end{itemize}
 \end{frame}
 
+% Credit: https://gist.github.com/jboner/2841832
 \begin{frame}{Latency}
 	Everything you do on a computer takes time. Some things are fast, and some of them are
 	comparatively very slow.
-	\begin{itemize}
-		\item https://gist.github.com/jboner/2841832
-		\item https://twitter.com/DynamicWebPaige/status/1044443943679668224/photo/1
-		\item The important thing to consider is the magnitudes involved here
-\item Your code can be CPU bound, Memory bound or IO bound (either disk or network)
-\item Most of my work is CPU bound or memory bound
-\item If you're working in
-	bioinformatics, perhaps you're IO bound and spend your life waiting for
-	disks to spin
-	\end{itemize}
+	{
+	\tiny
+			\begin{tabular}{lllll}
+Task & ns & us & ms & Note \\
+\hline
+L1 cache reference                &          0.5 ns &&& \\
+Branch mispredict                 &          5   ns &&& \\
+L2 cache reference                &          7   ns &&                   &14x L1 cache \\
+Mutex lock/unlock                 &         25   ns &&& \\
+Main memory reference             &        100   ns &&                   &20x L2 cache, 200x L1 cache \\
+Compress 1K bytes with Zippy      &      3,000   ns &      3 us&& \\
+Send 1K bytes over 1 Gbps network &     10,000   ns &     10 us&& \\
+Read 4K randomly from SSD*        &    150,000   ns &    150 us&         &~1GB/sec SSD \\
+Read 1 MB sequentially from memory&    250,000   ns &    250 us&& \\
+Round trip within same datacenter &    500,000   ns &    500 us&& \\
+Read 1 MB sequentially from SSD*  &  1,000,000   ns &  1,000 us  & 1 ms &~1GB/sec SSD, 4X memory \\
+Disk seek                         & 10,000,000   ns & 10,000 us  &10 ms &20x datacenter roundtrip \\
+Read 1 MB sequentially from disk  & 20,000,000   ns & 20,000 us  &20 ms &80x memory, 20X SSD \\
+Send packet CA \to Netherlands \to CA&150,000,000 ns&150,000 us&150 ms
+\hline
+			\end{tabular}
+		}
+			What you should focus on here aren't the specific \emph{numbers}, but the difference in
+	\emph{magnitude}.
+\end{frame}
+
+% Credit: https://twitter.com/DynamicWebPaige/status/1044443943679668224/photo/1
+\begin{frame}{Latency -- graphically}
+	\begin{figure}
+		\includegraphics[scale=0.60]{Latency_graphically.png}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{What should we do to speed things up?}
@@ -235,16 +262,19 @@ you attempt to access a piece of memory that's not yours. You need to tell them 
 
 \begin{frame}{What's coming?}
 	\begin{itemize}
-		\item Better hardware -- higher core counts, GPUs with more cores \\
-			You can get a Power9 system with 144 cores for \$3,500, delivered.
-			\
-			You could get two of them -- 288 cores. And Power10 is due soon.
-			Intel is releasing CPUs with higher core counts.
-			NVidia is releasing GPUs with more and more cores.
-			\note{The day will soon come where you routinely use machines with 1000 cores or more. In fact, if you play computer games and have an NVidia GPU, you're already doing this!}
-	\note{Show \texttt{htop} for a Power9 system}
-		\item Better languages - like Julia or Python with TensoreFlow that
-			allow you to use this hardware more easily
+		\item Better hardware -- higher core counts, GPUs with more cores
+			\begin{itemize}
+				\item You can get a Power9 system with 144 cores for \$3,500, delivered.  You could get two of them -- 288 cores. And Power10 is due soon.
+				\item Intel is releasing CPUs with higher core counts.
+				\item NVidia is releasing GPUs with more and more cores.
+			\end{itemize}
+
+		\item Better languages -- allowing you to use this hardware more easily
+			\begin{itemize}
+				\item Better compilers
+				\item Better libraries e.g. TensorFlow
+				\item Just-In-Time compilers/interpilers
+			\end{itemize}
 	\end{itemize}
 \end{frame}
 
@@ -256,10 +286,10 @@ you attempt to access a piece of memory that's not yours. You need to tell them 
 	we ran our CPUs any faster, \emph{they'd melt} \note{Reference Sophie Wilson's talk again}
 \item If you're doing all of your computing on your laptop, you're \emph{really}
 	missing out. You should at least know how to use servers
-\item I assembled a small HPC cluster for \$100 per node. It lives in my coffee table. Ask me how! Computers have become very cheap
+\item I assembled a small HPC cluster for \$100 per node. Ask me how! Computers have become very cheap
 \item We have lots of research servers, and HPC have thousands of computers. Make good use of
 	them.
-\item The cloud is someone else's computer, that they'll let you rent by the hour. Thanks to the cloud, computing is now a commodity.
+\item The cloud is someone else's computer, they'll rent by the hour. Computing is now a commodity.
 	\end{itemize}
 \end{frame}
 
