@@ -1,0 +1,21 @@
+digraph example {
+    rankdir=TB;
+    { node [shape=box] n_1_1[label=n_1] n_2_1[label=n_2] n_3_1[label=n_3] n_4_1[label=n_4] n_5_1[label=n_5] n_6_1[label=n_6] n_7_1[label=n_7] n_8_1[label=n_8] rank=same }
+    { node [shape=box] n_1_2[label=n_1] n_3_2[label=n_3] n_5_2[label=n_5] n_7_2[label=n_7] rank=same }
+    { node [shape=box] n_1_3[label=n_1] n_5_3[label=n_5] rank=same }
+    { node [shape=box] n_1_4[label=n_1] rank=same }
+    n_1_1->n_1_2;
+    n_2_1->n_1_2;
+    n_3_1->n_3_2;
+    n_4_1->n_3_2;
+    n_5_1->n_5_2;
+    n_6_1->n_5_2;
+    n_7_1->n_7_2;
+    n_8_1->n_7_2;
+    n_1_2->n_1_3;
+    n_3_2->n_1_3;
+    n_5_2->n_5_3;
+    n_7_2->n_5_3;
+    n_1_3->n_1_4;
+    n_5_3->n_1_4;
+}
