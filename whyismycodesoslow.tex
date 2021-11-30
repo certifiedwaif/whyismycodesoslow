@@ -81,7 +81,7 @@
 	already.  If they start to take minutes or hours, maybe not
 	\note{and you're waiting for the
 	results before you can do anything else, the speed of your code dictates the
-	speed of your research.  For some areas of research, like computational fluid
+	speed of your work/research.  For some areas of research, like computational fluid
 dynamics, bioinformatics or others, computational speed becomes the limiting factor}
 
 		\item Time is money, and $\text{speed} \propto \text{time}^{-1}$. So speed is money.
@@ -97,7 +97,7 @@ dynamics, bioinformatics or others, computational speed becomes the limiting fac
 			accurate result in less runtime, your software is better and you can publish a
 		paper on that.}
 
-		\item If you're writing software for other people to use, and it takes too long, they just won't use it
+		\item If you're writing software for other people to use, and it takes too long to run, they just won't use it
 	\note{I worked as an applied statistician for years. If a model took more than a few minutes to run, I'd usually just give up and try something else. The reason I ended up back here is that I ran a model which took ten minutes to run and then failed to converge (!). This \emph{really} pissed me off.}
 	\end{itemize}
 \end{frame}
@@ -125,7 +125,18 @@ dynamics, bioinformatics or others, computational speed becomes the limiting fac
 		
 	\end{itemize}
 \end{frame}
-% TODO: Insert the xkcd comic
+
+\begin{frame}{Is it worth the time?}
+	As with most things, there's an xkcd comic which is relevant.
+
+	\begin{figure}
+		\includegraphics[scale=0.25]{is_it_worth_the_time.png}
+	\end{figure}
+
+	Making code faster isn't an end in itself. You can easily spend more time
+	than you save. And programmer time is worth \emph{a lot} more than computer
+	time.
+\end{frame}
 
 \begin{frame}{What do computers actually do? - CPU}
 	A computer consists of a few major components.
@@ -177,10 +188,10 @@ dynamics, bioinformatics or others, computational speed becomes the limiting fac
 	\begin{itemize}
 		\item This introduces the concept of a \emph{memory hierarchy}
 		\item Some memory is very fast e.g. registers, but extremely expensive,
-		item so we don't have much of it to work with
+		so we don't have much of it to work with
 		\item Some memory is very cheap, but slow e.g. hard disks
 		\item The fast and slow parts of our computers work together to get our
-		item work done in a reasonable time, without costing too much
+		work done in a reasonable time, without costing too much
 		\item You can think of a computer as a network of interconnected components,
 		communicating with each other
 		\item This communication takes \emph{time}!
@@ -221,8 +232,8 @@ dynamics, bioinformatics or others, computational speed becomes the limiting fac
 		\item To allow programmers to be more productive, higher level languages
 		like Fortran and C were invented
 
-\item  And then even more high level ones, like R and Python. Python and R are
-``glue'' languages that make calling C and Fortran easy, should you need to
+		\item  And then even more high level ones, like R and Python. Python and R are
+		``glue'' languages that make calling C and Fortran easy, should you need to
 
 		\item There are two major ways that code gets converted to instructions for computers to run: \emph{compilers} and \emph{interpreters}
 			\begin{itemize}
@@ -294,14 +305,14 @@ dynamics, bioinformatics or others, computational speed becomes the limiting fac
 
 \begin{frame}{A brief history of computer hardware -- 1980s to 2006}
 	\begin{itemize}
-\item For a while, Moore's Law continues unabated --
-Every year, the clock speed doubles.
- This exponential increase goes on for some time, from ~1 MHz (Commodore 64) to
- ~5.2 GHz (i9-12900K, 24 threads, 30 MB L3 cache, 76.8 GB/s memory bandwidth). Good times!!!
- % https://ark.intel.com/content/www/us/en/ark/products/134599/intel-core-i912900k-processor-30m-cache-up-to-5-20-ghz.html
+		\item For a while, Moore's Law continues unabated --
+		Every year, the clock speed doubles.
+		This exponential increase goes on for some time, from ~1 MHz (Commodore 64) to
+		~5.2 GHz (i9-12900K, 24 threads, 30 MB L3 cache, 76.8 GB/s memory bandwidth). Good times!!!
+		% https://ark.intel.com/content/www/us/en/ark/products/134599/intel-core-i912900k-processor-30m-cache-up-to-5-20-ghz.html
 
-\item	Clock speeds keep increasing, but memory and disk speed does \emph{not} keep pace.
-Hard disks can read 10Mb/s to 20Mb/s (~10,000 times slower than memory!) \\
+		\item	Clock speeds keep increasing, but memory and disk speed does \emph{not} keep pace.
+		Hard disks can read 10Mb/s to 20Mb/s (~10,000 times slower than memory!) \\
 	\emph{Solution:} Cache/Memory hierarchy! RAID disk arrays!
 	\end{itemize}
 \end{frame}
@@ -315,7 +326,7 @@ Hard disks can read 10Mb/s to 20Mb/s (~10,000 times slower than memory!) \\
 		\item Solid State Drives become available, which are much faster than hard disks,
 			able to transfer 550 MB/s (nearly approx 2 orders of magnitude faster!!! Only 140 times slower than memory). % Only 140 times slower than RAM.
 		\item So why can't we go any faster? It's expensive to make things any smaller (billions of dollars)
-		\item And then you item have to dissipate the heat \ldots
+		\item And then you have to dissipate the heat \ldots
 	\end{itemize}
 	
 \end{frame}
@@ -363,23 +374,23 @@ Hard disks can read 10Mb/s to 20Mb/s (~10,000 times slower than memory!) \\
 	{
 	\tiny
 			\begin{tabular}{lllll}
-Task & ns & us & ms & Note \\
-\hline
-L1 cache reference                &          0.5 ns &&& \\
-Branch mispredict                 &          5   ns &&& \\
-L2 cache reference                &          7   ns &&                   &14x L1 cache \\
-Mutex lock/unlock                 &         25   ns &&& \\
-Main memory reference             &        100   ns &&                   &20x L2 cache, 200x L1 cache \\
-Compress 1K bytes with Zippy      &      3,000   ns &      3 us&& \\
-Send 1K bytes over 1 Gbps network &     10,000   ns &     10 us&& \\
-Read 4K randomly from SSD*        &    150,000   ns &    150 us&         &~1GB/sec SSD \\
-Read 1 MB sequentially from memory&    250,000   ns &    250 us&& \\
-Round trip within same datacenter &    500,000   ns &    500 us&& \\
-Read 1 MB sequentially from SSD*  &  1,000,000   ns &  1,000 us  & 1 ms &~1GB/sec SSD, 4X memory \\
-Disk seek                         & 10,000,000   ns & 10,000 us  &10 ms &20x datacenter roundtrip \\
-Read 1 MB sequentially from disk  & 20,000,000   ns & 20,000 us  &20 ms &80x memory, 20X SSD \\
-Send packet CA to the Netherlands and back again & 150,000,000 ns & 150,000 us & 150 ms \\
-\hline
+				Task & ns & us & ms & Note \\
+				\hline
+				L1 cache reference                &          0.5 ns &&& \\
+				Branch mispredict                 &          5   ns &&& \\
+				L2 cache reference                &          7   ns &&                   &14x L1 cache \\
+				Mutex lock/unlock                 &         25   ns &&& \\
+				Main memory reference             &        100   ns &&                   &20x L2 cache, 200x L1 cache \\
+				Compress 1K bytes with Zippy      &      3,000   ns &      3 us&& \\
+				Send 1K bytes over 1 Gbps network &     10,000   ns &     10 us&& \\
+				Read 4K randomly from SSD*        &    150,000   ns &    150 us&         &~1GB/sec SSD \\
+				Read 1 MB sequentially from memory&    250,000   ns &    250 us&& \\
+				Round trip within same datacenter &    500,000   ns &    500 us&& \\
+				Read 1 MB sequentially from SSD*  &  1,000,000   ns &  1,000 us  & 1 ms &~1GB/sec SSD, 4X memory \\
+				Disk seek                         & 10,000,000   ns & 10,000 us  &10 ms &20x datacenter roundtrip \\
+				Read 1 MB sequentially from disk  & 20,000,000   ns & 20,000 us  &20 ms &80x memory, 20X SSD \\
+				Send packet CA to the Netherlands and back again & 150,000,000 ns & 150,000 us & 150 ms \\
+				\hline
 			\end{tabular}
 		}
 			What you should focus on here aren't the specific \emph{numbers}, but the difference in
@@ -730,6 +741,10 @@ Send packet CA to the Netherlands and back again & 150,000,000 ns & 150,000 us &
 		\item Keeping your data set small can yield huge performance benefits
 		if you can stay higher up the memory hierarchy for a greater proportion
 		of the time
+
+		\item The fastest kind of communication is no communcation. If you can
+		structure your parallel computations so that they don't have to talk, they'll
+		be faster
 
 		\item If you can, get your data into RAM, and keep it there! This is exactly what
 		Spark does
